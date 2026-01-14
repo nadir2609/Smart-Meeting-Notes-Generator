@@ -1,0 +1,22 @@
+# Core Framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+python-multipart==0.0.12
+
+# Local AI Models (FREE)
+git+https://github.com/openai/whisper.git
+transformers==4.46.0
+torch==2.9.1
+sentencepiece==0.2.0
+
+# Audio Processing
+pydub==0.25.1
+librosa==0.10.2
+
+# Database
+sqlalchemy==2.0.36
+aiosqlite==0.20.0
+
+# Utilities
+python-dotenv==1.0.1
+aiofiles==24.1.0
