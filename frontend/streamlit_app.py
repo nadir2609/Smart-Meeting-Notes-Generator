@@ -1,4 +1,5 @@
 """Smart Meeting Notes Generator - Streamlit Frontend"""
+import os
 import streamlit as st
 import requests
 from datetime import datetime
@@ -13,8 +14,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Backend API URL
-API_URL = "http://localhost:8000"
+# Backend API URL (supports both local and deployed environments)
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 # Custom CSS
 st.markdown("""
