@@ -62,8 +62,8 @@ Thank you for your interest in contributing! 🎉
 
 ```bash
 # Clone your fork
-git clone https://github.com/yourusername/smart-meeting-notes.git
-cd smart-meeting-notes
+git clone https://github.com/nadir2609/Smart-Meeting-Notes-Generator.git
+cd Smart-Meeting-Notes-Generator
 
 # Create virtual environment
 python -m venv env
@@ -88,7 +88,6 @@ flake8 .
 ## Questions?
 
 Feel free to ask questions in:
-- [GitHub Discussions](https://github.com/yourusername/smart-meeting-notes/discussions)
-- [Issues](https://github.com/yourusername/smart-meeting-notes/issues)
+- [Issues](https://github.com/nadir2609/Smart-Meeting-Notes-Generator/issuess)
 
 Thank you for contributing! 🚀
