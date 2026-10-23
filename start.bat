@@ -5,7 +5,7 @@ echo.
 REM Check if virtual environment exists
 if not exist "env\" (
     echo Creating virtual environment...
-    python -m venv env
+    py -3.10 -m venv env
     call env\Scripts\activate.bat
     echo Installing dependencies...
     pip install -r requirements.txt

@@ -9,6 +9,11 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./data/meetings.db")
 
+# SQLite can't create missing folders, so make sure the database folder exists
+if DATABASE_URL.startswith("sqlite") and ":///" in DATABASE_URL:
+    db_path = DATABASE_URL.split(":///", 1)[1]
+    os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+
 # Create async engine
 engine = create_async_engine(
     DATABASE_URL,

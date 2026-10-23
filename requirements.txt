@@ -4,7 +4,7 @@ uvicorn[standard]==0.30.0
 python-multipart==0.0.12
 
 # Local AI Models (FREE)
-openai-whisper==20240930
+openai-whisper==20250625
 transformers==4.46.0
 torch==2.5.1
 sentencepiece==0.2.0
@@ -12,6 +12,9 @@ sentencepiece==0.2.0
 # Audio Processing
 pydub==0.25.1
 librosa==0.10.2
+
+# Gemini (free tier) for summaries
+google-genai==2.32.0
 
 # Database
 sqlalchemy==2.0.36
@@ -24,4 +27,4 @@ streamlit==1.40.0
 
 # Testing
 pytest==8.3.0
-httpx==0.27.0
+httpx==0.28.1

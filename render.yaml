@@ -16,6 +16,10 @@ services:
         value: cpu
       - key: DATABASE_URL
         value: sqlite+aiosqlite:///./data/meetings.db
+      - key: GEMINI_API_KEY
+        sync: false  # set the value in the Render dashboard
+      - key: GEMINI_MODEL
+        value: gemini-flash-latest
     disk:
       name: meetings-data
       mountPath: /data
