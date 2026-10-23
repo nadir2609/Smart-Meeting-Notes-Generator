@@ -1,11 +1,44 @@
 """NLP service for text processing and summarization (FREE)"""
 import os
 import re
+import json
 import asyncio
 from collections import Counter
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
+
+_gemini_client = None
+if GEMINI_API_KEY and GEMINI_API_KEY != "your_gemini_api_key_here":
+    from google import genai
+    _gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+    print(f"✅ Gemini summarization enabled (model: {GEMINI_MODEL})")
+else:
+    print("⚠️ GEMINI_API_KEY not set - using basic keyword summarization")
+
+
+class MeetingNotes(BaseModel):
+    """Structured output we ask Gemini to return"""
+    summary: str
+    key_points: list[str]
+    action_items: list[str]
+
+
+SUMMARY_PROMPT = """You are an assistant that writes meeting notes.
+Read the meeting transcript below and return:
+- summary: a clear 3-6 sentence summary of the meeting
+- key_points: the most important points, decisions and conclusions (up to 8)
+- action_items: concrete tasks or follow-ups, including who owns them and deadlines if mentioned (up to 8)
+If there are no key points or action items, return an empty list for that field.
+Write in the same language as the transcript.
+
+Transcript:
+{transcript}
+"""
 
 
 def clean_transcript(text: str) -> str:
@@ -39,14 +72,17 @@ def clean_transcript(text: str) -> str:
 
 async def generate_summary(transcript: str) -> dict:
     """
-    Generate meeting summary using extractive summarization
-    
+    Generate meeting summary with Gemini (or a basic extractive method if no API key)
+
     Args:
         transcript: Meeting transcript text
-        
+
     Returns:
         dict with 'summary', 'key_points', and 'action_items'
     """
+    if _gemini_client:
+        return await _generate_summary_gemini(transcript)
+
     try:
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(None, _generate_summary_sync, transcript)
@@ -54,6 +90,30 @@ async def generate_summary(transcript: str) -> dict:
     
     except Exception as e:
         raise Exception(f"Summarization failed: {str(e)}")
+
+
+async def _generate_summary_gemini(transcript: str) -> dict:
+    """Summarize the transcript with the Gemini API"""
+    from google.genai import types
+
+    try:
+        response = await _gemini_client.aio.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=SUMMARY_PROMPT.format(transcript=transcript),
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=MeetingNotes,
+            ),
+        )
+        notes = MeetingNotes(**json.loads(response.text))
+    except Exception as e:
+        raise Exception(f"Gemini summarization failed: {str(e)}")
+
+    return {
+        "summary": notes.summary,
+        "key_points": notes.key_points or ["No specific key points identified"],
+        "action_items": notes.action_items or ["No specific action items identified"],
+    }
 
 
 def _generate_summary_sync(transcript: str) -> dict:

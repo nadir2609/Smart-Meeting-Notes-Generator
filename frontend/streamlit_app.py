@@ -82,11 +82,11 @@ with st.sidebar:
     **Features:**
     - 🎤 Upload audio files
     - 📝 AI transcription (Whisper)
-    - 📊 Smart summaries (BART)
+    - 📊 Smart summaries (Gemini)
     - 🎯 Key points extraction
     - ✅ Action items detection
     
-    **100% FREE** - No API keys needed!
+    **FREE** - Gemini free-tier API key
     """)
 
 # Main content
@@ -211,6 +211,6 @@ elif page == "📚 Meeting History":
 st.divider()
 st.markdown("""
 <div style="text-align: center; color: #666; padding: 1rem;">
-    Made with ❤️ using Streamlit, FastAPI, Whisper & BART | 100% Free & Open Source
+    Made with ❤️ using Streamlit, FastAPI, Whisper & Gemini | Free & Open Source
 </div>
 """, unsafe_allow_html=True)

@@ -115,7 +115,10 @@ async def transcribe_meeting(
         raise HTTPException(status_code=404, detail="Audio file not found")
     
     # Transcribe audio
-    transcript_data = await transcribe_audio(meeting.audio_path)
+    try:
+        transcript_data = await transcribe_audio(meeting.audio_path)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
     # Clean transcript
     cleaned_transcript = clean_transcript(transcript_data["text"])
@@ -156,7 +159,10 @@ async def summarize_meeting(
         raise HTTPException(status_code=400, detail="Meeting must be transcribed first")
     
     # Generate summary
-    summary_data = await generate_summary(meeting.transcript_text)
+    try:
+        summary_data = await generate_summary(meeting.transcript_text)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=str(e))
     
     # Update meeting record
     meeting.summary = summary_data["summary"]

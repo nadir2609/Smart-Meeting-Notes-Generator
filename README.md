@@ -1,11 +1,11 @@
 # Smart Meeting Notes Generator
 
-Convert meeting audio into transcripts and AI-generated summaries using OpenAI Whisper and GPT.
+Convert meeting audio into transcripts and AI-generated summaries using local Whisper (transcription) and Google Gemini (summaries, free tier).
 
 ## Features
 
 - 🎙️ Upload audio files (MP3, WAV, M4A, MP4)
-- 📝 Automatic transcription using OpenAI Whisper
+- 📝 Automatic transcription using Whisper (runs locally, free)
 - 🤖 AI-generated summaries, key points, and action items
 - 💾 SQLite database for meeting history
 - 🖥️ Simple Streamlit frontend
@@ -14,17 +14,21 @@ Convert meeting audio into transcripts and AI-generated summaries using OpenAI W
 ## Setup
 
 ### 1. Create Virtual Environment
+Use Python 3.10 (newer versions like 3.14 are not supported by the pinned packages).
 ```bash
-python -m venv env
+py -3.10 -m venv env
 .\env\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-### 2. Configure OpenAI API Key
-Copy `.env.example` to `.env` in the backend folder and add your OpenAI API key:
+### 2. Configure Gemini API Key (free)
+Get a free key at https://aistudio.google.com/apikey, then copy `backend/.env.example` to `backend/.env` and set:
 ```
-OPENAI_API_KEY=sk-your-key-here
+GEMINI_API_KEY=your-key-here
 ```
+Without a key, the app still works but uses a basic keyword-based summary.
+
+You also need [ffmpeg](https://ffmpeg.org/download.html) installed for Whisper to read audio files.
 
 ### 3. Run Backend
 ```bash
@@ -33,9 +37,12 @@ uvicorn app.main:app --reload --port 8000
 ```
 
 ### 4. Run Frontend
+In a second terminal (with the venv activated):
 ```bash
-streamlit run frontend/streamlit_app.py
+cd frontend
+streamlit run streamlit_app.py
 ```
+Then open http://localhost:8501
 
 ## API Endpoints
 
@@ -48,10 +55,10 @@ streamlit run frontend/streamlit_app.py
 
 ## Tech Stack
 
-- **Backend:** FastAPI, SQLAlchemy, OpenAI API
+- **Backend:** FastAPI, SQLAlchemy, Google Gen AI SDK
 - **Frontend:** Streamlit
 - **Database:** SQLite
-- **AI:** OpenAI Whisper (transcription) + GPT-4 (summarization)
+- **AI:** Whisper, local (transcription) + Gemini (summarization)
 
 ## Project Structure
 
